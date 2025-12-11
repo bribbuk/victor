@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Victor's Tape</title>
 
 <style>
@@ -9,10 +10,10 @@
     background: #262626;
     color: #ffcc00;
     margin: 0;
-    padding: 0px;
+    padding: 0;
     line-height: 1.1;
     font-family: monospace;
-    font-weight: 800; /* makes it chunkier, more terminal-like */
+    font-weight: 800;
     letter-spacing: 0.05em;
     text-shadow: 0 0 2px #EBFA7A;
     overflow-x: hidden;
@@ -21,11 +22,10 @@
   h1 {
     font-family: monospace;
     font-weight: 1000;
-    letter-spacing: 0.05em;
+    letter-spacing: 1px;
     color: #ffcc00;
     text-shadow: 0 0 3px #EBFA7A;
     margin-top: 30px;
-    letter-spacing: 1px;
   }
 
   p.small {
@@ -38,51 +38,44 @@
     margin-top: 20px;
     font-size: 1.3em;
   }
-  
-.typeout {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  height: 1.4em; /* prevents layout shift */
-  width: min(32ch, 100%);   /* prevents pushing the button */
-  font-family: monospace;
-  font-size: 1.1em;
-  font-weight: 600; /* makes it chunkier, more terminal-like */
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 4px #EBFA7A;
 
-  /* typing animation + fadeout */
-  animation: typing 6s steps(60, end) infinite;
-}
+  .typeout {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 1.4em;
+    width: min(32ch, 100%);
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 4px #EBFA7A;
+    animation: typing 6s steps(60, end) infinite;
+  }
 
-/* THE NEW, PROPER TERMINAL CURSOR */
-.typeout::after {
-  content: "▉";                 /* block cursor */
-  display: inline-block;
-  margin-left: 4px;
-  color: #ffcc00;
-  text-shadow: 0 0 4px #EBFA7A;
-  animation: cursorBlink 0.8s step-end infinite;
-}
+  .typeout::after {
+    content: "▉";
+    display: inline-block;
+    margin-left: 4px;
+    color: #ffcc00;
+    text-shadow: 0 0 4px #EBFA7A;
+    animation: cursorBlink 0.8s step-end infinite;
+  }
 
-/* typing effect (no deletion) */
-@keyframes typing {
-  0%  { width: 0;   opacity: 1; }
-  40% { width: 100%; opacity: 1; }
-  60% { width: 100%; opacity: 1; }
-  90% { width: 100%; opacity: 1; }
-  95% { width: 100%; opacity: 0; }
-  100%{ width: 100%; opacity: 0; }
-}
+  @keyframes typing {
+    0%  { width: 0; opacity: 1; }
+    40% { width: 100%; opacity: 1; }
+    60% { width: 100%; opacity: 1; }
+    90% { width: 100%; opacity: 1; }
+    95% { width: 100%; opacity: 0; }
+    100%{ width: 100%; opacity: 0; }
+  }
 
-/* NEW cursor blink animation */
-@keyframes cursorBlink {
-  0%, 50% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
+  @keyframes cursorBlink {
+    0%, 50% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
 
-  
-  
   .button {
     display: inline-block;
     margin-top: 40px;
@@ -103,85 +96,115 @@
     background: #e6b800;
     border-color: #e6b800;
   }
-  
+
+  /* ——— SCALE ONLY THE CONTENT — NOT THE CRT ——— */
   .scale-container {
-    transform: scale(1.2);
-    transform-origin: top center; 
     overflow: visible;
-}
-  
+  }
+
   .container {
-  max-width: 650px;
-  margin: 0 auto;
-  padding: 50px;
-}
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 50px;
+    transform: scale(1.2);
+    transform-origin: top center;
+  }
 
   .teku-header {
-  font-family: monospace;
-  font-size: 0.85em;
-  font-weight: 900; /* makes it chunkier, more terminal-like */
-  letter-spacing: 0.2em;
-  opacity: 0.8;
-  text-align: left;
-  margin-bottom: 10px;
-}
+    font-family: monospace;
+    font-size: 0.85em;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    opacity: 0.8;
+    text-align: left;
+    margin-bottom: 10px;
+  }
 
-.divider {
-  border: none;
-  border-bottom: 1px solid #ffcc00;
-  opacity: 0.3;
-  margin-bottom: 20px;
-}
+  .divider {
+    border: none;
+    border-bottom: 1px solid #ffcc00;
+    opacity: 0.3;
+    margin-bottom: 20px;
+  }
 
+  /* ——— CRT FRAME ——— */
   .crt {
     position: relative;
     overflow: hidden;
-    min-height: 100vh; /* extend CRT to full viewport height */
+    min-height: 100vh;
     width: 100%;
-    display: block;
     animation: crtFlicker 0.15s infinite;
   }
 
-  /* CRT Scanlines */
-.crt::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.03) 0px,
-    rgba(255, 255, 255, 0.03) 1px,
-    rgba(0, 0, 0, 0) 2px
-  );
-  opacity: 0.25;
-  mix-blend-mode: overlay;
-}
+  /* scanlines */
+  .crt::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* perfect alignment */
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(0, 0, 0, 0) 2px
+    );
+    opacity: 0.25;
+    mix-blend-mode: overlay;
+  }
 
-
-  /* CRT Vignette Glow */
-.crt::after {
-  content: "";
-  position: absolute;
-  top: -10%; left: -10%; right: -10%; bottom: -10%;
-  pointer-events: none;
-  background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
-  opacity: 0.3;
-}
-
+  /* vignette */
+  .crt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    opacity: 0.3;
+  }
 
   @keyframes crtFlicker {
     0% { opacity: 0.96; }
     50% { opacity: 1; }
     100% { opacity: 0.97; }
+  }
+
+  /* ——— MOBILE FIX ——— */
+  @media (max-width: 600px) {
+
+    body {
+      font-size: 8px;
+      padding: 0 !important; /* prevents faux border */
+      margin: 0;
     }
 
-  
-  
+    .container {
+      transform: none;  /* no scaling on mobile */
+      padding: 20px;    /* internal spacing */
+    }
+
+    .button {
+      font-size: 1.4em;
+      padding: 16px 24px;
+    }
+
+    .typeout {
+      font-size: 1.3em;
+    }
+
+    h1 {
+      font-size: 2em;
+      line-height: 1.3;
+    }
+
+    p.bodytext {
+      font-size: 1.3em;
+    }
+  }
+
 </style>
 </head>
 
@@ -190,40 +213,37 @@
     <div class="crt">
       <div class="container">
 
-  
-  <p class="teku-header">UNREGISTERED TEKU SLATE</p>
-  
-  <hr class="divider">
-        
-  <p class="small">Recorded Transmission SERIAL-K783-JA14N D22250508</p>
+        <p class="teku-header">UNREGISTERED TEKU SLATE</p>
+        <hr class="divider">
 
-  <div style="height: 40px;"></div>
-        
-  <h1>UNTITLED_DATA_TAPE</h1>
+        <p class="small">Recorded Transmission SERIAL-K783-JA14N D22250508</p>
 
-<p class="bodytext">
-  Thank you for purchasing a Casio-Kawasaki Data Tape. Engineered for accuracy, durability, and universal Teku Device {public domain} compatibility.
-</p>
+        <div style="height: 40px;"></div>
 
-<p class="bodytext">
-  Please enter a title and description of your stored information.
-</p>
+        <h1>UNTITLED_DATA_TAPE</h1>
 
-<p class="bodytext">
-  For commercial compliance, we recommend classifying and encoding information in accordance with the latest guidance issued by the ISO Court of Human Rights. Casio-Kawasaki accepts no liability for any loss or damage arising from improper use, handling, or storage.
-</p>
+        <p class="bodytext">
+          <i>Please enter a title and description of your stored information.</i>
+        </p>
 
-        
-  <div style="height: 100px;"></div>
+        <p class="bodytext">
+          Thank you for purchasing a Casio-Kawasaki Data Tape. Engineered for accuracy, durability, and universal Teku Device {public domain} compatibility.
+        </p>
 
-  <p class="typeout">▉ ▉ ▉ Audio Packet Detected </p>
-  
-  <a class="button" href="https://github.com/bribbuk/victor/raw/refs/heads/main/Milosh%20Virek's%20Message%20to%20Victor.m4a">
-    <b>EXTRACT PACKET</b>
-  </a>
+        <p class="bodytext">
+          For commercial compliance, we recommend classifying and encoding information in accordance with the latest guidance issued by the ISO Court of Human Rights. Casio-Kawasaki accepts no liability for any loss or damage arising from improper use, handling, or storage.
+        </p>
 
+        <div style="height: 100px;"></div>
+
+        <p class="typeout">▉ ▉ ▉ Audio Packet Detected</p>
+
+        <a class="button" href="https://github.com/bribbuk/victor/raw/refs/heads/main/Milosh%20Virek's%20Message%20to%20Victor.m4a">
+          <b>EXTRACT PACKET</b>
+        </a>
+
+      </div>
     </div>
-   </div>
   </div>
 </body>
 </html>
